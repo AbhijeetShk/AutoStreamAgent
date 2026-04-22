@@ -1,25 +1,40 @@
-import json
+import os
+import warnings
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+from langchain_huggingface import HuggingFaceEmbeddings
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+warnings.filterwarnings("ignore")
+
+_db = None
 
 
-def load_kb():
-    with open('knowledge_base.json', 'r') as f:
-        return json.load(f)
+def get_db():
+    global _db
+
+    if _db is None:
+        loader = TextLoader("knowledge_base.md")
+        docs = loader.load()
+
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=300,
+            chunk_overlap=40
+        )
+
+        chunks = splitter.split_documents(docs)
+
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
+
+        _db = FAISS.from_documents(chunks, embeddings)
+
+    return _db
 
 
-def answer_from_kb(question: str) -> str:
-    data = load_kb()
-    q = question.lower()
-
-    if 'basic' in q:
-        return 'Basic Plan: $29/month, 10 videos/month, 720p resolution.'
-
-    if 'pro' in q:
-        return 'Pro Plan: $79/month, unlimited videos, 4K resolution, AI captions.'
-
-    if 'refund' in q:
-        return data['policies']['refund']
-
-    if 'support' in q:
-        return data['policies']['support']
-
-    return 'We offer Basic ($29) and Pro ($79) plans. Ask me anything specific.'
+def search_docs(query: str) -> str:
+    db = get_db()
+    docs = db.similarity_search(query, k=2)
+    return "\n".join([doc.page_content for doc in docs])
