@@ -1,5 +1,9 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 import streamlit as st
-from graph import build_graph
+from app.graph import build_graph
 
 st.set_page_config(page_title="AutoStream Assistant", page_icon="☕️")
 st.title("AutoStream Assistant")

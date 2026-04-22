@@ -1,8 +1,8 @@
 from langgraph.graph import StateGraph, END
-from state import AgentState
-from llm import llm
-from rag import search_docs
-from tools import mock_lead_capture
+from app.state import AgentState
+from app.llm import llm
+from app.rag import search_docs
+from app.tools import mock_lead_capture
 
 INVALID_NAME_WORDS = {
     "pricing",

@@ -1,15 +1,8 @@
-# AutoStream Conversational AI Agent
-
-## Features
-- Intent detection
-- Knowledge base Q&A
-- Lead capture flow
-- Multi-turn memory
-
-# AutoStream Social-to-Lead Agent
+# AutoStream Conversational AI Agent - Social-to-Lead
 
 ## Overview
 This project is a LangGraph-based conversational agent for AutoStream. It can classify user intent, answer pricing or policy questions using local RAG, detect buying intent, collect lead details and trigger a backend tool.
+
 
 ## Why LangGraph
 The workflow has multiple states: answering questions, switching into lead qualification mode, collecting fields, then executing an action. LangGraph made this efficient than writing one long procedural chatbot script.
@@ -17,12 +10,11 @@ The workflow has multiple states: answering questions, switching into lead quali
 ## LLM Used
 Groq API with Llama 3.1 8B Instant (free tier friendly).
 
-## Run Locally
-```bash
-pip install -r requirements.txt
-cp .env.example .env
-# add GROQ_API_KEY
-python app.py
+## Features
+- Intent detection
+- Knowledge base Q&A
+- Lead capture flow
+- Multi-turn memory
 
 ## Integrating Whatsapp (Future Enhancement)
 
@@ -42,7 +34,11 @@ Send reply back through WhatsApp API
 
 So if someone asks pricing, the bot replies instantly. If they show interest, it moves into lead collection mode.
 
-## Handling Memory Efficiently
+
+## Architecture
+
+
+### Handling Memory Efficiently
 
 Since this project needs multi-turn memory, I’d store each user’s conversation state using their phone number as a unique ID.
 
@@ -56,7 +52,7 @@ Waiting for email
 This can be stored in Redis (caching and fast option) or PostgreSQL if persistence is needed.
 
 
-## Lead Capture Flow
+### Lead Capture Flow
 
 Once the bot collects:
 
@@ -66,7 +62,7 @@ Creator platform
 
 It can trigger mock_lead_capture() or send the lead to a real CRM like HubSpot.
 
-## Security / Production Considerations
+### Security / Production Considerations
 
 For real deployment we can add:
 
@@ -75,8 +71,29 @@ Request validation/auth
 Webhook token verification
 Logging and retry handling
 
-## Stack (In case of whatsapp feature)
+### Stack (In case of whatsapp feature)
 FastAPI – webhook backend
 LangGraph – conversation workflow
 Redis – memory/session state
 Render / AWS – deployment
+
+
+## Run Locally
+
+### Run Streamlit UI
+
+```bash
+streamlit run ui/streamlit_app.py
+```
+### Using Docker
+
+```bash
+docker build -t autostream-agent .
+docker run -p 8000:8000 --env-file .env autostream-agent
+```
+
+### Run Locally API
+
+```bash
+uvicorn main:app --reload
+```

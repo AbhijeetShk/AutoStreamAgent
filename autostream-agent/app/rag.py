@@ -15,7 +15,7 @@ def get_db():
     global _db
 
     if _db is None:
-        loader = TextLoader("knowledge_base.md")
+        loader = TextLoader("data/knowledge_base.md")
         docs = loader.load()
 
         splitter = RecursiveCharacterTextSplitter(
