@@ -3,6 +3,9 @@
 ## Overview
 This project is a LangGraph-based conversational agent for AutoStream. It can classify user intent, answer pricing or policy questions using local RAG, detect buying intent, collect lead details and trigger a backend tool.
 
+## Demo Video
+
+[Watch the demo](./demo.mov)
 
 ## Why LangGraph
 The workflow has multiple states: answering questions, switching into lead qualification mode, collecting fields, then executing an action. LangGraph made this efficient than writing one long procedural chatbot script.
